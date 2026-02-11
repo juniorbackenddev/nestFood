@@ -10,6 +10,18 @@ import {AuthModule} from './auth/auth.module';
 import {UsersEntity} from "./entities/users.entity";
 import {TypeOrmModule} from "@nestjs/typeorm";
 import {ConfigModule} from "@nestjs/config";
+import {OrderEntity} from "./entities/order.entity";
+import {Order_itemEntity} from "./entities/order_item.entity";
+import {CartEntity} from "./entities/cart.entity";
+import {Cart_itemEntity} from "./entities/cart_item.entity";
+import {ProductEntity} from "./entities/product.entity";
+import {AddressEntity} from "./entities/address.entity";
+import {RestaurantEntity} from "./entities/restaurant.entity";
+import {CategoriesEntity} from "./entities/categories.entity";
+import {OptionEntity} from "./entities/option.entity";
+import { CategoriesController } from './categories/categories.controller';
+import { CategoriesService } from './categories/categories.service';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
     imports: [
@@ -24,10 +36,10 @@ import {ConfigModule} from "@nestjs/config";
             username: 'root',
             password: 'password',
             database: 'nest_food',
-            entities: [UsersEntity],
+            entities: [UsersEntity, OrderEntity, Order_itemEntity, Cart_itemEntity,CartEntity, ProductEntity, AddressEntity, RestaurantEntity, CategoriesEntity, OptionEntity],
             synchronize: true,
         }),
-        UsersModule, AuthModule
+        UsersModule, AuthModule, CategoriesModule
     ],
     controllers: [AppController, AuthController],
     providers: [AppService, JwtStrategy],
