@@ -20,7 +20,7 @@ export class ProductEntity {
     description: string;
 
     @Column()
-    imageUrL: string;
+    imageUrl: string;
 
     @ManyToMany(() => OptionEntity, (option) => option.product)
     @JoinTable({
@@ -38,5 +38,5 @@ export class ProductEntity {
 
     @ManyToOne(() => RestaurantEntity, (restaurant) => restaurant.product)
     @JoinColumn({name: "restaurant_id"})
-    restaurant: RestaurantEntity[];
+    restaurant: RestaurantEntity;
 }
