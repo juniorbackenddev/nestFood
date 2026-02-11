@@ -1,4 +1,5 @@
-import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
+import {RestaurantEntity} from "./restaurant.entity";
 
 @Entity()
 export class CategoriesEntity {
@@ -7,4 +8,12 @@ export class CategoriesEntity {
 
     @Column()
     name: string;
+
+    @ManyToMany(() => RestaurantEntity, (restaurant) => restaurant.categories )
+    @JoinTable({
+        name: 'restaurant_categories',
+        joinColumn: { name: 'categoriesId', referencedColumnName: 'id' },
+        inverseJoinColumn: { name: 'restaurantId', referencedColumnName: 'id' },
+    })
+    restaurant: RestaurantEntity[];
 }

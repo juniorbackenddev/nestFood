@@ -1,4 +1,5 @@
-import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, ManyToMany, PrimaryGeneratedColumn} from "typeorm";
+import {ProductEntity} from "./product.entity";
 
 @Entity()
 export class OptionEntity {
@@ -10,5 +11,8 @@ export class OptionEntity {
 
     @Column()
     priceModifier: number;
+
+    @ManyToMany(() => ProductEntity, (product) => product.option)
+    product: ProductEntity;
 }
 

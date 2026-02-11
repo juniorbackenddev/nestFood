@@ -1,10 +1,13 @@
 import {
     Column,
     CreateDateColumn,
-    Entity,
+    Entity, OneToMany,
     PrimaryGeneratedColumn,
 } from 'typeorm';
 import {Exclude} from 'class-transformer';
+import {AddressEntity} from "./address.entity";
+import {CartEntity} from "./cart.entity";
+import {OrderEntity} from "./order.entity";
 
 
 @Entity()
@@ -34,5 +37,14 @@ export class UsersEntity {
 
     @CreateDateColumn()
     createdAt: Date;
+
+    @OneToMany(() => AddressEntity, (address) => address.user)
+    address: AddressEntity[];
+
+    @OneToMany(() => CartEntity, (cart) => cart.user)
+    cart: CartEntity[];
+
+    @OneToMany(() => OrderEntity, (order) => order.user)
+    order: OrderEntity[];
 
 }
