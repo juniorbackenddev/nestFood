@@ -10,8 +10,10 @@ export class RestaurantEntity {
 
     @Column()
     name: string;
+
     @Column()
     imageUrl: string;
+
     @Column()
     minCartPrice: number;
 

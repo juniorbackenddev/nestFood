@@ -22,6 +22,7 @@ import {OptionEntity} from "./entities/option.entity";
 import { CategoriesController } from './categories/categories.controller';
 import { CategoriesService } from './categories/categories.service';
 import { CategoriesModule } from './categories/categories.module';
+import { RestaurantModule } from './restaurant/restaurant.module';
 
 @Module({
     imports: [
@@ -39,7 +40,7 @@ import { CategoriesModule } from './categories/categories.module';
             entities: [UsersEntity, OrderEntity, Order_itemEntity, Cart_itemEntity,CartEntity, ProductEntity, AddressEntity, RestaurantEntity, CategoriesEntity, OptionEntity],
             synchronize: true,
         }),
-        UsersModule, AuthModule, CategoriesModule
+        UsersModule, AuthModule, CategoriesModule, RestaurantModule
     ],
     controllers: [AppController, AuthController],
     providers: [AppService, JwtStrategy],

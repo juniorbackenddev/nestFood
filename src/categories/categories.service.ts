@@ -25,4 +25,15 @@ export class CategoriesService {
         }
         return category;
     }
+
+
+    async findCategoriesById(id: number)  {
+        const category = await this.categoriesRepository.findOneBy({id});
+        if (!category) {
+            throw new NotFoundException(`Kategori bulunamadı`);
+        }
+        return category;
+    }
+
+
 }
