@@ -1,7 +1,7 @@
 import {
     Column,
     CreateDateColumn,
-    Entity, OneToMany,
+    Entity, OneToMany, OneToOne,
     PrimaryGeneratedColumn,
 } from 'typeorm';
 import {Exclude} from 'class-transformer';
@@ -41,10 +41,10 @@ export class UsersEntity {
     @OneToMany(() => AddressEntity, (address) => address.user)
     address: AddressEntity[];
 
-    @OneToMany(() => CartEntity, (cart) => cart.user)
-    cart: CartEntity[];
-
     @OneToMany(() => OrderEntity, (order) => order.user)
     order: OrderEntity[];
+
+    @OneToOne(() => CartEntity, (cart) => cart.user)
+    cart: CartEntity[];
 
 }
