@@ -1,4 +1,4 @@
-import {Body, Controller, Post, UseGuards} from '@nestjs/common';
+import {Body, Controller, Param, Post, UseGuards} from '@nestjs/common';
 import {ProductService} from "./product.service";
 import {JwtAuthGuard} from "../users/jwt-auth-guard/jwt-auth-guard.service";
 import {ProductDto} from "../dtos/product.dto";
@@ -13,5 +13,15 @@ export class ProductController {
     async takeProduct(
         @Body() productDto: ProductDto) {
         return await this.productService.takeProduct(productDto);
+    }
+
+    // product.controller.ts
+
+    @Post(':id/options')
+    async addOptionsToProduct(
+        @Param('id') productId: number,
+        @Body('optionIds') optionIds: number[]
+    ) {
+        return await this.productService.addOptionsToProduct(productId, optionIds);
     }
 }
