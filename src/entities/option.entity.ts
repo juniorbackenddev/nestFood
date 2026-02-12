@@ -1,5 +1,6 @@
 import {Column, Entity, ManyToMany, PrimaryGeneratedColumn} from "typeorm";
 import {ProductEntity} from "./product.entity";
+import {Cart_itemEntity} from "./cart_item.entity";
 
 @Entity()
 export class OptionEntity {
@@ -9,10 +10,13 @@ export class OptionEntity {
     @Column()
     name: string;
 
-    @Column()
+    @Column({ type: 'decimal', precision: 10, scale: 2 })
     priceModifier: number;
 
     @ManyToMany(() => ProductEntity, (product) => product.option)
-    product: ProductEntity;
+    product: ProductEntity[];
+
+    @ManyToMany(() => Cart_itemEntity, (cartItem) => cartItem.selectedOptions)
+    cartItems: Cart_itemEntity[];
 }
 
