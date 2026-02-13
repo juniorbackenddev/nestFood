@@ -20,9 +20,13 @@ export class Cart_itemEntity {
     @JoinColumn({name: "product_id"})
     product: ProductEntity;
 
-    @ManyToMany(() => OptionEntity)
-    @JoinTable({ name: 'cart_item_selected_options' }) // Kullanıcının o anki seçimleri
-    selectedOptions: OptionEntity[];
+    @ManyToMany(() => OptionEntity, (option) => option.cart_item)
+    @JoinTable({
+        name: 'cart_item_option',
+        joinColumn: {name: 'cart_itemId', referencedColumnName: 'id'},
+        inverseJoinColumn: {name: 'optionId', referencedColumnName: 'id'},
+    })
+    option: OptionEntity[];
 
 
 }

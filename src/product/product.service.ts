@@ -54,7 +54,7 @@ export class ProductService {
     async getProductById(productId: number) {
         const product = await this.productRepository.findOne({
             where: { id: productId },
-            relations: ["option"]
+            relations: ["option","restaurant"]
         });
         if(!product) {
             throw new NotFoundException('Böyle bir Product bulunamadı.')

@@ -28,9 +28,6 @@ import { OptionsModule } from './options/options.module';
 import { CartService } from './cart/cart.service';
 import { CartController } from './cart/cart.controller';
 import { CartModule } from './cart/cart.module';
-import { OrderService } from './order/order.service';
-import { OrderController } from './order/order.controller';
-import { OrderModule } from './order/order.module';
 import { OrdersModule } from './orders/orders.module';
 
 @Module({
@@ -49,10 +46,10 @@ import { OrdersModule } from './orders/orders.module';
             entities: [UsersEntity, OrderEntity, Order_itemEntity, Cart_itemEntity,CartEntity, ProductEntity, AddressEntity, RestaurantEntity, CategoriesEntity, OptionEntity],
             synchronize: true,
         }),
-        UsersModule, AuthModule, CategoriesModule, RestaurantModule, ProductModule, OptionsModule, CartModule, OrderModule, OrdersModule
+        UsersModule, AuthModule, CategoriesModule, RestaurantModule, ProductModule, OptionsModule, CartModule, OrdersModule, OrdersModule
     ],
-    controllers: [AppController, OrderController],
-    providers: [AppService, JwtStrategy, OrderService],
+    controllers: [AppController],
+    providers: [AppService, JwtStrategy],
 })
 export class AppModule {
 }
