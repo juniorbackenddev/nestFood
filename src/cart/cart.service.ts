@@ -29,12 +29,28 @@ export class CartService {
 
         // C. Opsiyonları filtrele
         const selectedOptions = (product.option || []).filter(productOption =>
-            cart_itemDto.optionIds.some(requestedId => Number(requestedId) === Number(productOption.id))
+            (cart_itemDto.optionIds || []).some(requestedId => Number(requestedId) === Number(productOption.id))
         );
 
         // KONTROL LOGU (Bunu production'da silebilirsin)
         console.log(`Ürünün Toplam Opsiyonu: ${product.option?.length}`);
         console.log(`Seçilen Opsiyon Sayısı: ${selectedOptions.length}`);
+
+        const existingItem = await this.cart_itemRepository.findOne({
+            where: {
+                cart: {id: cart.id},
+                product: {id: product.id},
+            }
+        });
+        if (existingItem) {
+            existingItem.quantity += cart_itemDto.quantity;
+
+            await this.cart_itemRepository.save(existingItem);
+
+            existingItem.product = product;
+
+            return existingItem;
+        }
 
         // D. Yeni Item Oluştur (Cart ID'sini TypeORM halledecek)
         const newItem = this.cart_itemRepository.create({
@@ -60,18 +76,18 @@ export class CartService {
     // 2. YARDIMCI: Sepeti Getir (İlişkilerle Birlikte)
     async getCart(userId: number) {
         const cart = await this.cartRepository.findOne({
-            where: { user: { id: userId } },
+            where: {user: {id: userId}},
             relations: [
                 'cart_item',
                 'cart_item.product',
                 'cart_item.product.restaurant', // Restoran bilgisi burada gelir
                 'cart_item.selectedOptions',
             ],
-            order: { id: 'DESC' } // Varsa en son sepet gelir
+            order: {id: 'DESC'} // Varsa en son sepet gelir
         });
 
         // Temiz bir başlangıç için boş obje dön
-        if (!cart) return { totalPrice: 0, cart_item: [] };
+        if (!cart) return {totalPrice: 0, cart_item: []};
 
         // Opsiyonel: Response'u temizle (Product içindeki tüm opsiyon listesini sil)
         cart.cart_item.forEach(item => {
@@ -83,11 +99,12 @@ export class CartService {
 
     // 3. YARDIMCI: Sepet Yoksa Oluştur (Private Method)
     private async getOrCreateCart(userId: number): Promise<CartEntity> {
-        let cart = await this.cartRepository.findOne({ where: { user: { id: userId } } });
+        let cart = await this.cartRepository.findOne(
+            {where: {user: {id: userId}}});
 
         if (!cart) {
             cart = this.cartRepository.create({
-                user: { id: userId },
+                user: {id: userId},
                 totalPrice: 0
             });
             await this.cartRepository.save(cart);
@@ -100,5 +117,46 @@ export class CartService {
     private calculateItemPrice(product: any, options: any[], quantity: number): number {
         const optionsTotal = options.reduce((sum, opt) => sum + Number(opt.priceModifier), 0);
         return (Number(product.price) + optionsTotal) * quantity;
+    }
+
+
+    async removeItem(itemId: number, userId: number) {
+
+        const item = await this.cart_itemRepository.findOne({
+            where: { id: itemId, cart: { user: { id: userId } } },
+            relations: ["cart", "product"]
+        });
+
+        if (!item) throw new NotFoundException("Sepetinizde böyle bir ürün bulunamadı");
+        const reducePrice = item.product.price * item.quantity;
+
+        item.cart.totalPrice = Math.max(0, item.cart.totalPrice - reducePrice);
+        await this.cartRepository.save(item.cart);
+        await this.cart_itemRepository.delete(itemId);
+
+        return {
+            message: "Ürün sepetten kaldırıldı",
+            newTotalPrice: item.cart.totalPrice
+        };
+    }
+
+    async removeAllCartItems(userId: number) {
+        const carts = await this.cartRepository.findOne({
+            where: {    user: { id: userId  } },
+        });
+        if(!carts) {
+            throw new NotFoundException("Sepetinizde zaten ürün yok")
+        }
+
+        await this.cart_itemRepository.delete({ cart: { id: carts.id } });
+
+        carts.totalPrice = 0;
+        await this.cartRepository.save(carts);
+
+        return {
+            message: "Sepet tamamen boşaltıldı",
+            newTotalPrice: 0
+        };
+
     }
 }

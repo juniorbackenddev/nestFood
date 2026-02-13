@@ -16,13 +16,6 @@ export class AuthController {
         @Res({passthrough: true}) response: Response,
     ) {
         const loginn = await this.authService.login(login);
-       /* response.cookie('access-token', loginn.token.accessToken, {
-            httpOnly: true,
-            secure: false,
-            maxAge: 60 * 60 * 1000,
-        });
-
-        */
         return loginn;
     }
 

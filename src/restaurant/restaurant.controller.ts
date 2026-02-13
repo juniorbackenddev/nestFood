@@ -4,6 +4,7 @@ import {RolesGuard} from "../roles/roles.guard";
 import {JwtAuthGuard} from "../users/jwt-auth-guard/jwt-auth-guard.service";
 import {RestaurantEntity} from "../entities/restaurant.entity";
 import {RestaurantDto} from "../dtos/restaurant.dto";
+import {Roles} from "../roles/roles.decorator";
 
 @Controller('restaurants')
 export class RestaurantController {
@@ -12,6 +13,7 @@ export class RestaurantController {
 
 
     @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles('ADMIN')
     @Post()
     async createRestaurant(
         @Body() restaurantDto: RestaurantDto

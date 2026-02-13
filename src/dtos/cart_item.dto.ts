@@ -10,5 +10,5 @@ export class CartItemDto {
     @IsArray()
     @IsOptional()
     @IsNumber({}, { each: true })
-    optionIds: number[];
+    optionIds?: number[];
 }

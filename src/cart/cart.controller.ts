@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Param, Post, Req, UseGuards} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, Post, Req, UseGuards} from '@nestjs/common';
 import {CartService} from "./cart.service";
 import {CartItemDto} from "../dtos/cart_item.dto";
 import {JwtAuthGuard} from "../users/jwt-auth-guard/jwt-auth-guard.service";
@@ -22,6 +22,22 @@ export class CartController {
     @Get()
     async getCart(@Req() req) {
         return await this.cartService.getCart(req.user.id);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Delete('item/:id')
+    async deleteCart(
+        @Req() req,
+        @Param('id')itemId: number) {
+        const userId =req.user.id;
+        return await this.cartService.removeItem(itemId, userId);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Delete()
+    async deleteAllCart(@Req() req, @Param('id') id: number) {
+        const userId =req.user.id;
+        return await this.cartService.removeAllCartItems(userId)
     }
 
 }
