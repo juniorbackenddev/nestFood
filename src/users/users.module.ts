@@ -8,6 +8,7 @@ import {UsersController} from "./users.controller";
 import {JwtAuthGuard} from "./jwt-auth-guard/jwt-auth-guard.service";
 import {JwtModule} from "@nestjs/jwt";
 import {ConfigModule, ConfigService} from "@nestjs/config";
+import {AddressEntity} from "../entities/address.entity";
 
 
 @Module({
@@ -22,7 +23,7 @@ import {ConfigModule, ConfigService} from "@nestjs/config";
             }),
             inject: [ConfigService],
         }),
-        TypeOrmModule.forFeature([UsersEntity]),
+        TypeOrmModule.forFeature([UsersEntity,AddressEntity]),
         PassportModule.register({ defaultStrategy: 'jwt' })],
     providers: [UsersService, JwtStrategy, JwtAuthGuard],
     exports: [UsersService],

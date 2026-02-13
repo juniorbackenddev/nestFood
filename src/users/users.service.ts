@@ -7,6 +7,8 @@ import {RegisterDto} from "../dtos/register.dto";
 import * as bcrypt from 'bcrypt';
 import {RefreshDto} from "../dtos/refresh.dto";
 import {LoginDto} from "../dtos/login.dto";
+import {AddressEntity} from "../entities/address.entity";
+import {AddressDto} from "../dtos/address.dto";
 
 
 @Injectable()
@@ -14,6 +16,8 @@ export class UsersService {
     constructor(
         @InjectRepository(UsersEntity)
         private readonly authRepository: Repository<UsersEntity>,
+        @InjectRepository(AddressEntity)
+        private readonly addressRepository:Repository<AddressEntity>,
         private readonly jwtService: JwtService,
     ) {
     }
@@ -132,5 +136,13 @@ export class UsersService {
             console.log('existingUser', existingUser);
             return existingUser;
         }
+    }
+
+    async createAddress(addressDto: AddressDto,userId: number) {
+        const address = await this.addressRepository.create({
+            ...addressDto,
+            user: { id: userId }
+        });
+        return await this.addressRepository.save(address);
     }
 }

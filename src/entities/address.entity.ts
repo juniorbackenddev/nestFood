@@ -7,24 +7,20 @@ export class AddressEntity {
     id: number;
 
     @Column()
-    name: string;
-
-     @Column()
     title: string;
 
-     @Column()
+    @Column()
     city: string;
 
-     @Column()
+    @Column()
     district: string;
 
-     @Column()
+    @Column()
     openAddress: string;
 
     @ManyToOne(() => UsersEntity, (user) => user.address)
-    @JoinColumn({ name: 'userId' })
+    @JoinColumn({name: 'userId'})
     user: UsersEntity;
-
 
 
 }
