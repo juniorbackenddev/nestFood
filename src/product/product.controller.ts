@@ -4,7 +4,7 @@ import {JwtAuthGuard} from "../users/jwt-auth-guard/jwt-auth-guard.service";
 import {ProductDto} from "../dtos/product.dto";
 import {RolesGuard} from "../roles/roles.guard";
 import {Roles} from "../roles/roles.decorator";
-import {ApiBody, ApiOperation, ApiResponse} from "@nestjs/swagger";
+import {ApiBody, ApiOperation, ApiParam, ApiResponse} from "@nestjs/swagger";
 
 @Controller('products')
 export class ProductController {
@@ -38,6 +38,14 @@ export class ProductController {
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Post(':id/options')
     @Roles('ADMIN')
+    @ApiOperation({ summary: 'Ürüne seçenek (varyasyon) ekler' })
+    @ApiParam({
+        name: 'id',
+        required: true,
+        description: 'Seçenek eklenecek ürünün ID\'si',
+        example: 10
+    })
+
     @ApiBody({
         schema: {
             type: 'object',
@@ -45,10 +53,30 @@ export class ProductController {
                 optionIds: {
                     type: 'array',
                     items: { type: 'integer' },
-                    example: [1, 2, 5]
+                    example: [1,2,5]
                 }
             }
         }
+    })
+    @ApiResponse({
+        status: 201,
+        description: 'Seçenekler başarıyla ürüne bağlandı.'
+    })
+    @ApiResponse({
+        status: 400,
+        description: 'Hatalı İstek. "optionIds" bir dizi (array) olmalıdır.'
+    })
+    @ApiResponse({
+        status: 401,
+        description: 'Yetkisiz. Token yok veya geçersiz.'
+    })
+    @ApiResponse({
+        status: 403,
+        description: 'Erişim Engellendi. Sadece ADMIN yetkisi gerekir.'
+    })
+    @ApiResponse({
+        status: 404,
+        description: 'Verilen ID ile ürün bulunamadı.'
     })
     async addOptionsToProduct(
         @Param('id') productId: number,
