@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, Get, Param, Post, Req, UseGuards} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Req, UseGuards} from '@nestjs/common';
 import {CartService} from "./cart.service";
 import {CartItemDto} from "../dtos/cart_item.dto";
 import {JwtAuthGuard} from "../users/jwt-auth-guard/jwt-auth-guard.service";
@@ -59,7 +59,7 @@ export class CartController {
     })
     async deleteCart(
         @Req() req,
-        @Param('id')itemId: number) {
+        @Param('id', ParseIntPipe) itemId: number ) {
         const userId =req.user.id;
         return await this.cartService.removeItem(itemId, userId);
     }
@@ -71,7 +71,7 @@ export class CartController {
         status: 200,
         description: 'Sepet başarıyla boşaltıldı.'
     })
-    async deleteAllCart(@Req() req, @Param('id') id: number) {
+    async deleteAllCart(@Req() req) {
         const userId =req.user.id;
         return await this.cartService.removeAllCartItems(userId)
     }

@@ -12,7 +12,7 @@ export class CartEntity {
     @Column()
     totalPrice: number;
 
-    @OneToMany(() => Cart_itemEntity, (cart_item) => cart_item.cart,{ cascade: true })
+    @OneToMany(() => Cart_itemEntity, (cart_item) => cart_item.cart, { cascade: true })
     cart_item: Cart_itemEntity[];
 
     @OneToOne(() => UsersEntity, (user) => user.cart)

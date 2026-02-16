@@ -1,9 +1,10 @@
-import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
+import {BadRequestException, forwardRef, Inject, Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from "@nestjs/typeorm";
 import {ProductEntity} from "../entities/product.entity";
-import {Repository} from "typeorm";
+import {In, Repository} from "typeorm";
 import {ProductDto} from "../dtos/product.dto";
 import {RestaurantService} from "../restaurant/restaurant.service";
+import {OptionsService} from "../options/options.service";
 
 @Injectable()
 export class ProductService {
@@ -11,6 +12,8 @@ export class ProductService {
         @InjectRepository(ProductEntity)
         private readonly productRepository: Repository<ProductEntity>,
         private readonly restaurantService: RestaurantService,
+        @Inject(forwardRef(() => OptionsService))
+        private readonly optionsService: OptionsService
     ) {
     }
 
@@ -35,6 +38,15 @@ export class ProductService {
 
         if (!product) {
             throw new NotFoundException(`ID'si ${productId} olan ürün bulunamadı.`);
+        }
+
+        const foundOptions = await this.optionsService.getOptionsById(optionIds);
+
+        if (foundOptions.length !== optionIds.length) {
+            const foundIds = foundOptions.map(o => o.id);
+            const missingIds = optionIds.filter(id => !foundIds.includes(id));
+
+            throw new NotFoundException(`Şu ID'li opsiyonlar sistemde bulunamadı: ${missingIds.join(', ')}`);
         }
 
         const existingIds = product.option.map((option) => option.id);

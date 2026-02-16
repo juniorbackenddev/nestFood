@@ -36,12 +36,21 @@ export class CartService {
             incomingOptionIds.includes(Number(opt.id))
         );
 
+        if (selectedOptions.length !== incomingOptionIds.length) {
+            const foundIds = selectedOptions.map(o => o.id);
+            const missingIds = incomingOptionIds.filter(id => !foundIds.includes(id));
+
+            throw new NotFoundException(`Hatalı işlem: ${missingIds.join(', ')} ID'li opsiyonlar bulunamadı.`);
+        }
+
 
         let matchedItem = cart.cart_item.find(item => {
             if (item.product.id !== product.id) return false;
 
-            // Opsiyon ID'lerini karşılaştır
-            const currentOptionIds = item.option.map(opt => Number(opt.id)).sort();
+            const currentOptionIds = item.option.map(opt => Number(opt.id)).sort((a, b) => a - b);
+
+            if (currentOptionIds.length !== incomingOptionIds.length) return false;
+
             return JSON.stringify(currentOptionIds) === JSON.stringify(incomingOptionIds);
         });
 
@@ -79,7 +88,6 @@ export class CartService {
         return {message: "Ürün silindi", cart: await this.getCart(userId)};
     }
 
-    // --- YARDIMCI METODLAR ---
 
     // Sepeti Getir (Okuma Modu)
     async getCart(userId: number) {

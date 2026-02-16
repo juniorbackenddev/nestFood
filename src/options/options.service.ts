@@ -1,4 +1,4 @@
-import {Injectable} from '@nestjs/common';
+import {forwardRef, Inject, Injectable} from '@nestjs/common';
 import {ProductService} from "../product/product.service";
 import {OptionDto} from "../dtos/option.dto";
 import {InjectRepository} from "@nestjs/typeorm";
@@ -10,6 +10,7 @@ export class OptionsService {
     constructor(
         @InjectRepository(OptionEntity)
         private optionRepository: Repository<OptionEntity>,
+        @Inject(forwardRef(() => ProductService))
         private productService: ProductService) {
     }
 
@@ -21,12 +22,12 @@ export class OptionsService {
             ...optionDto
         });
     }
-/*
+
     async getOptionsById(optionIds: number[]) {
         const options = await this.optionRepository.find({
             where: {id:In(optionIds)},
             select: ["id", "name", "priceModifier"]
         });
         return options;
-    }*/
+    }
 }
