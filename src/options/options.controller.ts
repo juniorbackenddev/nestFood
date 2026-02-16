@@ -4,8 +4,9 @@ import {JwtAuthGuard} from "../users/jwt-auth-guard/jwt-auth-guard.service";
 import {OptionDto} from "../dtos/option.dto";
 import {RolesGuard} from "../roles/roles.guard";
 import {Roles} from "../roles/roles.decorator";
-import {ApiBody, ApiOperation, ApiResponse} from "@nestjs/swagger";
+import {ApiBearerAuth, ApiBody, ApiOperation, ApiResponse} from "@nestjs/swagger";
 
+@ApiBearerAuth('accessToken')
 @Controller('options')
 export class OptionsController {
     constructor(

@@ -4,8 +4,9 @@ import {JwtAuthGuard} from "../users/jwt-auth-guard/jwt-auth-guard.service";
 import {ProductDto} from "../dtos/product.dto";
 import {RolesGuard} from "../roles/roles.guard";
 import {Roles} from "../roles/roles.decorator";
-import {ApiBody, ApiOperation, ApiParam, ApiResponse} from "@nestjs/swagger";
+import {ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiResponse} from "@nestjs/swagger";
 
+@ApiBearerAuth('accessToken')
 @Controller('products')
 export class ProductController {
     constructor(

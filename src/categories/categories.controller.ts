@@ -5,8 +5,9 @@ import {RolesGuard} from "../roles/roles.guard";
 import {CategoryDto} from "../dtos/category.dto";
 import {Roles} from "../roles/roles.decorator";
 import {CategoriesEntity} from "../entities/categories.entity";
-import {ApiBody, ApiOperation, ApiResponse} from "@nestjs/swagger";
+import {ApiBearerAuth, ApiBody, ApiOperation, ApiResponse} from "@nestjs/swagger";
 
+@ApiBearerAuth('accessToken')
 @Controller('categories')
 export class CategoriesController {
     constructor(private readonly categoriesService: CategoriesService) {

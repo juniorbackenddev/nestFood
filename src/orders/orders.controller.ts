@@ -1,8 +1,9 @@
 import {Controller, Get, Post, Req, UseGuards} from '@nestjs/common';
 import {OrdersService} from "./orders.service";
 import {JwtAuthGuard} from "../users/jwt-auth-guard/jwt-auth-guard.service";
-import {ApiOperation, ApiResponse} from "@nestjs/swagger";
+import {ApiBearerAuth, ApiOperation, ApiResponse} from "@nestjs/swagger";
 
+@ApiBearerAuth('accessToken')
 @Controller('orders')
 export class OrdersController {
     constructor(private readonly ordersService: OrdersService) {

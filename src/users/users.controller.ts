@@ -2,16 +2,17 @@ import {Body, Controller, Post, Req, UseGuards} from '@nestjs/common';
 import {UsersService} from "./users.service";
 import {AddressDto} from "../dtos/address.dto";
 import {JwtAuthGuard} from "./jwt-auth-guard/jwt-auth-guard.service";
-import {ApiBearerAuth, ApiBody, ApiOperation, ApiResponse} from "@nestjs/swagger";
+import {ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags} from "@nestjs/swagger";
 import {RegisterDto} from "../dtos/register.dto";
 
+@ApiTags('users') // Bunu eklemek swagger'da düzenli görünmesini sağlar
+@ApiBearerAuth('accessToken')
 @Controller('users')
 export class UsersController {
     constructor(
         private readonly usersService: UsersService) {
     }
 
-    @ApiBearerAuth()
     @UseGuards(JwtAuthGuard)
     @Post('address')
     @ApiOperation({summary: 'Kullanıcı addressi oluşturldu.'})
@@ -20,7 +21,7 @@ export class UsersController {
         status: 400,
         description: 'Hatalı İstek. Eksik veri veya yanlış format (Örn: Posta kodu girilmedi).'
     })
-    @ApiBody({type: RegisterDto})
+    @ApiBody({type: AddressDto})
     async createAddress(
         @Body() addressDto: AddressDto,
         @Req() req,

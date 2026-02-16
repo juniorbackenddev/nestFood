@@ -2,9 +2,9 @@ import {Body, Controller, Delete, Get, Param, Post, Req, UseGuards} from '@nestj
 import {CartService} from "./cart.service";
 import {CartItemDto} from "../dtos/cart_item.dto";
 import {JwtAuthGuard} from "../users/jwt-auth-guard/jwt-auth-guard.service";
-import {ApiBody, ApiOperation, ApiParam, ApiResponse} from "@nestjs/swagger";
+import {ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiResponse} from "@nestjs/swagger";
 
-
+@ApiBearerAuth('accessToken')
 @Controller('cart')
 export class CartController {
     constructor(

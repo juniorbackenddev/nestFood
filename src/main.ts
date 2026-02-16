@@ -9,7 +9,14 @@ async function bootstrap() {
       .setTitle('API Documentation')
     .setDescription('API Açıklama')
     .setVersion('1.0')
-      .addBearerAuth()
+      .addBearerAuth(
+          {
+              type: 'http',
+              scheme: 'bearer',
+              bearerFormat: 'JWT'
+          },
+          'accessToken' // <--- BU İSİM ANAHTAR KELİME
+      )
       .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
